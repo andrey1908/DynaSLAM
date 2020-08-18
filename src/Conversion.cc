@@ -139,7 +139,7 @@ public:
         //PyEnsureGIL gil;
         if( !data->refcount )
             return;
-        PyObject* o = pyObjectFromRefcount(&data->refcount);
+        PyObject* o = pyObjectFromUMatData(data);
         Py_INCREF(o);
         Py_DECREF(o);
     }
@@ -173,6 +173,7 @@ public:
         }
         UMatData* u = new UMatData(this);
         u->refcount = *refcountFromPyObject(o);
+        u->userdata = (void*)o;
 
         npy_intp* _strides = PyArray_STRIDES(o);
         for( i = 0; i < dims - (cn > 1); i++ )
@@ -240,7 +241,6 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
     }
 
     int ndims = PyArray_NDIM(o);
-
     if(ndims >= CV_MAX_DIM)
     {
         failmsg("toMat: Dimensionality (=%d) is too high", ndims);
@@ -289,11 +289,14 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
 #if ( CV_MAJOR_VERSION < 3)
         m.refcount = refcountFromPyObject(o);
 #else
-        m.u->refcount = *refcountFromPyObject(o);
+        if (m.u) {
+            m.u->refcount = *refcountFromPyObject(o);
+        }
 #endif
         m.addref(); // protect the original numpy array from deallocation
         // (since Mat destructor will decrement the reference counter)
     };
+
     m.allocator = &g_numpyAllocator;
 
     if( transposed )
@@ -328,7 +331,7 @@ PyObject* NDArrayConverter::toNDArray(const cv::Mat& m)
         p = &temp;
     }
     p->addref();
-    return pyObjectFromRefcount(&p->u->refcount);
+    return pyObjectFromUMatData(p->u);
 #endif
 
 }

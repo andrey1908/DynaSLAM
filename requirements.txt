@@ -1,0 +1,5 @@
+python 2.7
+CUDA 10.0
+cuDNN 7.6.5
+tensorflow-gpu 1.15.0
+Keras 2.0.9

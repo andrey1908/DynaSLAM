@@ -10,6 +10,7 @@
 
 #define CONVERSION_H_
 
+#include <iostream>
 #include <Python.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -50,6 +51,11 @@ static size_t REFCOUNT_OFFSET = (size_t)&(((PyObject*)0)->ob_refcnt) +
 static inline PyObject* pyObjectFromRefcount(const int* refcount)
 {
     return (PyObject*)((size_t)refcount - REFCOUNT_OFFSET);
+}
+
+static inline PyObject* pyObjectFromUMatData(const cv::UMatData* data)
+{
+    return (PyObject*)(data->userdata);
 }
 
 static inline int* refcountFromPyObject(const PyObject* obj)
