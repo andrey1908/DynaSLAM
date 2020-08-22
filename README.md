@@ -18,11 +18,14 @@ We provide examples to run the SLAM system in the [TUM dataset](http://projects.
 ## Requirements
 - CUDA 10.0
 - cuDNN 7.6.5
+- python 2.7
+- tensorflow-gpu 1.15.0
+- Keras 2.0.9
 
 ## Getting Started
 - Install ORB-SLAM2 prerequisites: C++11 or C++0x Compiler, Pangolin, OpenCV and Eigen3  (https://github.com/raulmur/ORB_SLAM2).
 - Install boost libraries with the command `sudo apt-get install libboost-all-dev`.
-- Install python 2.7, keras 2.0.9 and tensorflow-gpu 1.15.0, and download the `mask_rcnn_coco.h5` model from this GitHub repository: https://github.com/matterport/Mask_RCNN/releases. 
+- Install python, keras and tensorflow, and download the `mask_rcnn_coco.h5` model from this GitHub repository: https://github.com/matterport/Mask_RCNN/releases. 
 - Clone this repo:
 ```bash
 git clone https://github.com/BertaBescos/DynaSLAM.git
