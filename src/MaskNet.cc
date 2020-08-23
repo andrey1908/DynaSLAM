@@ -62,6 +62,8 @@ cv::Mat SegmentDynObject::GetSegmentation(cv::Mat &image,std::string dir, std::s
         PyObject* py_mask_image = PyObject_CallMethod(this->net, const_cast<char*>(this->get_dyn_seg.c_str()),"(O)",py_image);
         seg = cvt->toMat(py_mask_image).clone();
         seg.cv::Mat::convertTo(seg,CV_8U);//0 background y 1 foreground
+        Py_DECREF(py_image);
+        Py_DECREF(py_mask_image);
         if(dir.compare("no_save")!=0){
             DIR* _dir = opendir(dir.c_str());
             if (_dir) {closedir(_dir);}

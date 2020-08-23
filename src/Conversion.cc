@@ -136,12 +136,7 @@ public:
         return true;
     }
     void deallocate(UMatData* data) const {
-        //PyEnsureGIL gil;
-        if( !data->refcount )
-            return;
-        PyObject* o = pyObjectFromUMatData(data);
-        Py_INCREF(o);
-        Py_DECREF(o);
+        return;
     }
     UMatData* allocate(int dims, const int* sizes, int type,
                        void* data, size_t* step, int flags, UMatUsageFlags usageFlags) const {
@@ -293,16 +288,11 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
             m.u->refcount = *refcountFromPyObject(o);
         }
 #endif
-        m.addref(); // protect the original numpy array from deallocation
-        // (since Mat destructor will decrement the reference counter)
     };
-
-    m.allocator = &g_numpyAllocator;
 
     if( transposed )
     {
         Mat tmp;
-        tmp.allocator = &g_numpyAllocator;
         transpose(m, tmp);
         m = tmp;
     }
@@ -330,7 +320,6 @@ PyObject* NDArrayConverter::toNDArray(const cv::Mat& m)
         m.copyTo(temp);
         p = &temp;
     }
-    p->addref();
     return pyObjectFromUMatData(p->u);
 #endif
 
