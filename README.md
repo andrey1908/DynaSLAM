@@ -15,7 +15,8 @@ We provide examples to run the SLAM system in the [TUM dataset](http://projects.
 ## News
 - DynaSLAM supports now both OpenCV 2.X and OpenCV 3.X.
 
-## Requirements
+## Tested with
+- OpenCV 3.4.0
 - CUDA 10.0
 - cuDNN 7.6.5
 - python 2.7
