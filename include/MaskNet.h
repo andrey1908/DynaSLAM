@@ -12,7 +12,7 @@
 #define NULL   ((void *) 0)
 #endif
 
-#include <python2.7/Python.h>
+#include "Python.h"
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>

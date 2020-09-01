@@ -25,7 +25,13 @@ cd ..
 
 echo "Configuring and building DynaSLAM ..."
 
+if ["$1" == ""]; then
+    echo "Specify python version"
+    echo "ERROR occurred"
+    exit 1
+fi
+
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_BUILD_TYPE=Release -DPYTHON_VERSION=$1
 make -j

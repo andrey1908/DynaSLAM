@@ -8,7 +8,7 @@ ENDIF()
 
 MESSAGE("Build type: " ${CMAKE_BUILD_TYPE})
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native ")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O3 -march=native")
 
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O0 -march=native ")
@@ -55,13 +55,16 @@ find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5OpenGL REQUIRED)
 find_package(Qt5Test REQUIRED)
 
-find_package(PythonLibs REQUIRED)
-if (NOT PythonLibs_FOUND)
-    message(FATAL_ERROR "PYTHON LIBS not found.")
+if (PYTHON_VERSION STREQUAL 27)
+    set(PYTHON_INCLUDE_DIRS $ENV{HOME}/anaconda3/envs/env2/include/python2.7/ $ENV{HOME}/anaconda3/envs/env2/lib/python2.7/site-packages/numpy/core/include/numpy)
+    set(PYTHON_LIBRARY $ENV{HOME}/anaconda3/envs/env2/lib/libpython2.7.so)
+elseif(PYTHON_VERSION STREQUAL 37)
+    set(PYTHON_INCLUDE_DIRS $ENV{HOME}/anaconda3/envs/env/include/python3.7m/ $ENV{HOME}/anaconda3/envs/env/lib/python3.7/site-packages/numpy/core/include/numpy)
+    set(PYTHON_LIBRARY $ENV{HOME}/anaconda3/envs/env/lib/libpython3.7m.so)
 else()
-    message("PYTHON LIBS were found!")
-    message("PYTHON LIBS DIRECTORY: " ${PYTHON_LIBRARY})
+    message(FATAL_ERROR "PYTHON_VERSION is not supported")
 endif()
+add_definitions(-DPYTHON_VERSION=${PYTHON_VERSION})
 
 find_package(Boost REQUIRED COMPONENTS thread)
 if(Boost_FOUND)
@@ -74,15 +77,12 @@ endif()
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
 
-set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} /usr/local/lib/python2.7/dist-packages/numpy/core/include/numpy)
-
 include_directories(
 ${PROJECT_SOURCE_DIR}
 ${PROJECT_SOURCE_DIR}/include
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
-/usr/include/python2.7/
-/usr/lib/python2.7/dist-packages/numpy/core/include/numpy/
+${PYTHON_INCLUDE_DIRS}
 ${Boost_INCLUDE_DIRS}
 )
 message("PROJECT_SOURCE_DIR: " ${PROJECT_SOURCE_DIR})
@@ -119,7 +119,7 @@ ${EIGEN3_LIBS}
 ${Pangolin_LIBRARIES}
 ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
 ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
-/usr/lib/x86_64-linux-gnu/libpython2.7.so
+${PYTHON_LIBRARY}
 ${Boost_LIBRARIES}
 )
 
