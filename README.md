@@ -35,7 +35,7 @@ cd DynaSLAM
 ```
 cd DynaSLAM
 chmod +x build.sh
-./build.sh
+./build.sh 27 (for python 2.7 of 37 for python 3.7; original MaskRCNN network requires python 2.7)
 ```
 - Place the `mask_rcnn_coco.h5` model in the folder `DynaSLAM/src/python/`.
 

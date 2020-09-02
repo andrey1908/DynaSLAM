@@ -41,12 +41,10 @@ int main(int argc, char **argv)
     const int nImages = vstrImageLeft.size();
 
     // Initialize Mask R-CNN
-    cout << "Loading network. This could take a while..." << endl;
     DynaSLAM::SegmentDynObject *MaskNet;
     if (argc==5){
          MaskNet = new DynaSLAM::SegmentDynObject();
     }
-    cout << "Network net loaded!" << endl;
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
     ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::STEREO,true);
