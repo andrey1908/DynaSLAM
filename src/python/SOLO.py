@@ -52,7 +52,7 @@ class Mask:
         self.class_names = self.model.CLASSES
         self.model = MMDataParallel(self.model, device_ids=[0])
         self.model.eval()
-        self.pipeline = build_from_cfg(cfg.test_pipeline[1:][0], PIPELINES)
+        self.pipeline = Compose(cfg.test_pipeline[1:])
         self.classes_to_cut_out = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe']
         self.class_names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane',
                'bus', 'train', 'truck', 'boat', 'traffic light',
@@ -83,9 +83,6 @@ class Mask:
         data = {'img_info': {'height': h, 'width': w}, 'filename': None, 'seg_prefix': None, 'proposal_file': None, 'bbox_fields': [], 'mask_fields': [], 'seg_fields': [], 'img': image, 'img_shape': (h, w, 3), 'ori_shape': (h, w, 3)}
         data = self.pipeline(data)
         data = collate([data])
-        img = [data['img'][0].to(torch.device('cuda:0'))]
-        img_meta = data['img_meta'][0].data
-        data = {'img': img, 'img_meta': img_meta}
         with torch.no_grad():
             results = self.model(return_loss=False, rescale=True, **data)
         # Visualize results
