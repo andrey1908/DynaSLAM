@@ -24,15 +24,12 @@ from mmcv.parallel.collate import collate
 class Mask:
     """
     """
-    def __init__(self):
+    def __init__(self, network_name):
         print('Initializing SOLO network...')
 
         # Root directory of the project
-        ROOT_DIR = os.getcwd()
-        ROOT_DIR = "./src/python"
-        print(ROOT_DIR)
-
-        cfg = mmcv.Config.fromfile(os.path.join(ROOT_DIR, 'solov2.py'))
+        ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+        cfg = mmcv.Config.fromfile(os.path.join(ROOT_DIR, network_name + '.py'))
         # set cudnn_benchmark
         if cfg.get('cudnn_benchmark', False):
             torch.backends.cudnn.benchmark = True
@@ -40,7 +37,7 @@ class Mask:
         cfg.data.test.test_mode = True
 
         # Path to trained weights file
-        COCO_MODEL_PATH = os.path.join(ROOT_DIR, "solov2.pth")
+        COCO_MODEL_PATH = os.path.join(ROOT_DIR, network_name + '.pth')
 
         # Build the model and load checkpoint
         self.model = build_detector(cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)

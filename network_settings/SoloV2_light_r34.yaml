@@ -1,0 +1,6 @@
+%YAML:1.0
+py_path: "./src/python/"
+network_name: "solov2_light_r34"
+module_name: "SOLO"
+class_name: "Mask"
+get_dyn_seg: "GetDynSeg"

@@ -20,18 +20,16 @@ import model as modellib
 class Mask:
     """
     """
-    def __init__(self):
+    def __init__(self, network_name):
         print 'Initializing Mask RCNN network...'
         # Root directory of the project
-        ROOT_DIR = os.getcwd()
-        ROOT_DIR = "./src/python"
-        print(ROOT_DIR)
+        ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
         # Directory to save logs and trained model
         MODEL_DIR = os.path.join(ROOT_DIR, "logs")
 
         # Path to trained weights file
-        COCO_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
+        COCO_MODEL_PATH = os.path.join(ROOT_DIR, network_name + '.h5')
 
         # Set batch size to 1 since we'll be running inference on
         # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU

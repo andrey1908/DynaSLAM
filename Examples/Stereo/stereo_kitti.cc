@@ -26,9 +26,9 @@ void LoadImages(const string &strPathToSequence, vector<string> &vstrImageLeft,
 
 int main(int argc, char **argv)
 {
-    if(argc != 4  && argc != 5)
+    if(argc < 4  || argc > 6)
     {
-        cerr << endl << "Usage: ./stereo_kitti path_to_vocabulary path_to_settings path_to_sequence (path_to_masks)" << endl;
+        cerr << endl << "Usage: ./stereo_kitti path_to_vocabulary path_to_settings path_to_sequence (path_to_network_settings) (path_to_masks)" << endl;
         return 1;
     }
 
@@ -42,8 +42,14 @@ int main(int argc, char **argv)
 
     // Initialize Mask R-CNN
     DynaSLAM::SegmentDynObject *MaskNet;
-    if (argc==5){
-         MaskNet = new DynaSLAM::SegmentDynObject();
+    std::string path_to_left_masks("no_save");
+    std::string path_to_right_masks("no_save");
+    if (argc >= 5){
+         MaskNet = new DynaSLAM::SegmentDynObject(std::string(argv[4]));
+         if (argc == 6){
+             path_to_left_masks = string(argv[5]) + "/imLeft";
+             path_to_right_masks = string(argv[5]) + "/imRight";
+         }
     }
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
@@ -92,11 +98,11 @@ int main(int argc, char **argv)
         cv::Mat maskLeft = cv::Mat::ones(h,w,CV_8U);
 
         // Segment out the images
-        if (argc == 5){
+        if (argc >= 5){
             cv::Mat maskLeftRCNN, maskRightRCNN;
-            maskLeftRCNN = MaskNet->GetSegmentation(imLeft, string(argv[4])+"/imLeft",
+            maskLeftRCNN = MaskNet->GetSegmentation(imLeft, path_to_left_masks,
                     vstrImageLeft[ni].replace(vstrImageLeft[ni].begin(), vstrImageLeft[ni].end() - 10,""));
-            maskRightRCNN = MaskNet->GetSegmentation(imRight, string(argv[4])+"/imRight",
+            maskRightRCNN = MaskNet->GetSegmentation(imRight, path_to_right_masks,
                     vstrImageRight[ni].replace(vstrImageRight[ni].begin(), vstrImageRight[ni].end() - 10,""));
             cv::Mat maskLeftRCNNdil = maskLeftRCNN.clone();
             cv::dilate(maskLeftRCNN, maskLeftRCNNdil, kernel);
