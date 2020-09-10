@@ -10,6 +10,7 @@
 #include<iostream>
 #include<algorithm>
 #include<fstream>
+#include <dirent.h>
 #include<iomanip>
 #include<chrono>
 #include <unistd.h>
@@ -183,10 +184,31 @@ void LoadImages(const string &strPathToSequence, vector<string> &vstrImageLeft,
     vstrImageLeft.resize(nTimes);
     vstrImageRight.resize(nTimes);
 
+    DIR *dir;
+    struct dirent *file;
+    if ((dir = opendir(strPrefixLeft.c_str())) == NULL)
+    {
+        exit(1);
+    }
+    std::string file_name = ".";
+    while ((file_name == ".") || (file_name == "..")){
+        if ((file = readdir(dir)) == NULL)
+        {
+            exit(1);
+        }
+        file_name = file->d_name;
+    }
+    size_t name_width = file_name.find('.');
+    if (name_width == std::string::npos)
+    {
+        exit(1);
+    }
+    closedir(dir);
+
     for(int i=0; i<nTimes; i++)
     {
         stringstream ss;
-        ss << setfill('0') << setw(6) << i;
+        ss << setfill('0') << setw(name_width) << i;
         vstrImageLeft[i] = strPrefixLeft + ss.str() + ".png";
         vstrImageRight[i] = strPrefixRight + ss.str() + ".png";
     }
