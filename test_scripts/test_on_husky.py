@@ -16,9 +16,9 @@ def build_parser():
 
 program_to_run = 'Examples/Stereo/stereo_kitti'
 
-husky_calib_files = ['Examples/Stereo/Husky_2020-03-16.yaml',
-                     'Examples/Stereo/Husky_2020-03-17.yaml',
-                     'Examples/Stereo/Husky_2020-04-24.yaml']
+husky_calib_files = ['camera_calibration/Husky_2020-03-16.yaml',
+                     'camera_calibration/Husky_2020-03-17.yaml',
+                     'camera_calibration/Husky_2020-04-24.yaml']
 
 husky_calib_dates = ['2020-03-16',
                      '2020-03-17',
